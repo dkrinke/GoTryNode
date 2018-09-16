@@ -1,6 +1,7 @@
-const request = require('request');
 const fs = require('fs');
+const request = require('request');
 const yargs = require('yargs');
+const geocode = require('./geocode/geocode');
 
 const argv = yargs
 	.options({
@@ -15,26 +16,21 @@ const argv = yargs
 	.alias('help', 'h')
 	.argv;
 
-var mapQuestKey = fs.readFileSync('mapquest-key.txt');
-var encodedAddress = encodeURIComponent(argv.address);
-
-request({
-	url: `http://www.mapquestapi.com/geocoding/v1/address?key=${mapQuestKey}&location=${encodedAddress}`,
-	json: true
-}, (error, response, body) => {
-
-	const location = body.results[0].locations[0];
-
-	const street = location.street;
-	const city = location.adminArea5;
-	const state = location.adminArea3;
-	const postalCode = location.postalCode;
-	const country = location.adminArea1
-
-	const latitude = location.latLng.lat;
-	const longitude = location.latLng.lng;
-
-	console.log(`Address: ${street}, ${city}, ${state} ${postalCode}, ${country}`);
-	console.log(`Latitude: ${latitude}`);
-	console.log(`Longitude: ${longitude}`);
+geocode.geocodeAddress(argv.address, (errorMessage, results) => {
+	if(errorMessage) {
+		console.log(errorMessage);
+	} else {
+		console.log(results.formattedAddress);
+		var forecastAPIKey = fs.readFileSync('./keys/forecast-api-key.txt');
+		request({
+		url: `https://api.darksky.net/forecast/${forecastAPIKey}/${results.latitude},${results.longitude}`,
+		json: true
+	}, (error, response, body) => {
+			if (!error && response.statusCode === 200) {
+				console.log(JSON.stringify(body.currently.temperature));
+			} else {
+				console.log('Unable to fetch weather data from the Forecast.io server.');
+			}
+		});
+	}
 });
