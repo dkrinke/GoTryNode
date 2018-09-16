@@ -23,7 +23,13 @@ var geocodeAddress = (address, callback) => {
 			const postalCode = location.postalCode;
 			const country = location.adminArea1
 
-			const formattedAddress = `${street}, ${city}, ${state} ${postalCode}, ${country}`;
+			var formattedAddress = '';
+
+			if (street) {
+			 	formattedAddress = `${street}, ${city}, ${state} ${postalCode}, ${country}`;
+			} else {
+				formattedAddress = `${city}, ${state} ${postalCode}, ${country}`
+			}
 			const latitude = location.latLng.lat;
 			const longitude = location.latLng.lng;
 
