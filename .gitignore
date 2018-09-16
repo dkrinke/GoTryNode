@@ -9,3 +9,6 @@
 
 #Json data file for notes playground
 **/notes-node/playground/notes.json
+
+#MapQuest Key
+**/weather-app/mapquest-key.txt
