@@ -10,3 +10,4 @@ Clone this repository to your local machine (git clone https://github.com/dkrink
 
 * hello-world
 * notes-node
+* weather-app
