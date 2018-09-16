@@ -1,6 +1,6 @@
 # GoTryNode
 
-Playground for trying out node.js
+Playground for practicing node.js
 
 ## Applications
 
