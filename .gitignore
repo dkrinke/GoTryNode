@@ -1,2 +1,8 @@
+#Node modules
 **/node_modules
+
+#All lock files
 **/*-lock.json
+
+#Json data file for notes app
+**/notes-node/notes-data.json
