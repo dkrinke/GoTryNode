@@ -1,66 +1,74 @@
-console.log('Starting note.js')
-
 const fs = require('fs');
+
+var isUnique = (notes, title) => {
+
+	return (notes.filter((note) => note.title === title)).length === 0;
+};
+
+var fetchNotes = () => {
+	
+	try {
+		var notesString = fs.readFileSync('notes-data.json');
+		return JSON.parse(notesString);
+	} catch(error) {
+		return [];
+	}
+};
+
+var saveNotes = (notes) => {
+	fs.writeFileSync('notes-data.json', JSON.stringify(notes));
+};
 
 var addNote = (title, body) => {
 
-	var notesString = fs.readFileSync('notes-data.json');
-
-	var notes = JSON.parse(notesString);
-
+	var notes = fetchNotes();
 	var note = {
 		title,
 		body
 	};
 
-	notes.push(note);
+	if (isUnique(notes, note.title)) {
+		notes.push(note);
+	    saveNotes(notes);
+		return note;	
+	}
 
-	fs.writeFileSync('notes-data.json', JSON.stringify(notes));
-
-	return note;
+	return 'Note must have a unique title';
 
 };
 
 var getAll = () => {
-	var notesString = fs.readFileSync('notes-data.json');
 
-	var notes = JSON.parse(notesString);
+	var notes = fetchNotes();
 
 	return notes;
 };
 
 var getNote = (title) => {
-	var notesString = fs.readFileSync('notes-data.json');
 
-	var notes = JSON.parse(notesString);
+	var notes = fetchNotes();
 
-	for (var i = 0; i < notes.length; i++){
-    	var note = notes[i];
+	var filteredNotes = notes.filter((note) => note.title === title);
 
-	    if (note.title === title) {
-	    	return note;
-	    }
+	if (filteredNotes.length > 0) {
+	    return filteredNotes[0];
 	}
 
-	return;
+	return 'Note not found';
 };
 
 var removeNote = (title) => {
-	var notesString = fs.readFileSync('notes-data.json');
 
-	var notes = JSON.parse(notesString);
+	var notes = fetchNotes();
 
-	for (var i = 0; i < notes.length; i++){
-    	var note = notes[i];
+	var filteredNotes = notes.filter((note) => note.title !== title);
 
-	    if (note.title === title) {
-	    	notes.splice(i, 1);
-			fs.writeFileSync('notes-data.json', JSON.stringify(notes));
-	    	return note;
-	    }
+	if (filteredNotes.length < notes.length) {
+		saveNotes(filteredNotes);
+	    return 'Removed ' + title;
 	}
 
-	return;
+	return 'Note not found';
 };
 
 module.exports = {
@@ -68,4 +76,4 @@ module.exports = {
 	getAll,
 	getNote,
 	removeNote
-}
+};
