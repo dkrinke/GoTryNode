@@ -8,5 +8,5 @@ Clone this repository to your local machine (git clone https://github.com/dkrink
 
 ## Applications
 
-* hellow-world
+* hello-world
 * notes-node
