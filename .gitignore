@@ -6,3 +6,6 @@
 
 #Json data file for notes app
 **/notes-node/notes-data.json
+
+#Json data file for notes playground
+**/notes-node/playground/notes.json
